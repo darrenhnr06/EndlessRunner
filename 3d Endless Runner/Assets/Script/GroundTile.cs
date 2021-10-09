@@ -4,17 +4,15 @@ using UnityEngine;
 
 public class GroundTile : MonoBehaviour
 {
-    GameObject groundSpawnerGameObject;
     GroundSpawner groundSpawner;
-    void Start()
-    {
-        groundSpawnerGameObject = GameObject.Find("GroundSpawner");
-        groundSpawner = groundSpawnerGameObject.GetComponent<GroundSpawner>();
-    }
 
+    private void Awake()
+    {
+        groundSpawner = GameObject.FindObjectOfType<GroundSpawner>();
+    }
+  
     private void OnTriggerExit(Collider other)
     {
-        groundSpawner.SpawnTile();
-        Destroy(gameObject, 2);
+        groundSpawner.ChangeTilePos();
     }
 }
