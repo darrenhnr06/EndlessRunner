@@ -19,6 +19,11 @@ public class GroundSpawner : MonoBehaviour
     {
         temp.transform.position = nextSpawnPoint;
         nextSpawnPoint = temp.transform.GetChild(1).transform.position;
+        
+         for (int i = 0; i < temp.transform.GetChild(2).transform.childCount; i++)
+        {
+            temp.transform.GetChild(2).transform.GetChild(i).gameObject.SetActive(true);
+        }
     }
 
     void Start()
