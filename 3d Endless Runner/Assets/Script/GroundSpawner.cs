@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class GroundSpawner : MonoBehaviour
 {
-    public GameObject groundTile;
-    Vector3 nextSpawnPoint;
-    GameObject temp;
-  
+    [SerializeField]
+    private GameObject groundTile;
 
+    private Vector3 nextSpawnPoint;
+
+    private GameObject temp;
+  
     private void Awake()
     {
         PlayerPrefs.SetInt("Obstacle", 2);

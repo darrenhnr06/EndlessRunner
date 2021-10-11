@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GroundTile : MonoBehaviour
 {
-    GroundSpawner groundSpawner;
+    private GroundSpawner groundSpawner;
 
     private void Awake()
     {

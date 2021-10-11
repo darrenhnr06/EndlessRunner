@@ -4,18 +4,34 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-
 public class DebugMenu : MonoBehaviour
 {
-    public Button button;
-    public Image menuImage;
-    public TMP_InputField speedInput;
-    public CharacterMove character;
-    public Button saveButton;
-    public TMP_Dropdown cameraOption;
-    public Camera backCamera;
-    public Camera topCamera;
-    public TMP_Dropdown obstacleOption;
+    [SerializeField]
+    private Button button;
+
+    [SerializeField]
+    private Image menuImage;
+
+    [SerializeField]
+    private TMP_InputField speedInput;
+
+    [SerializeField]
+    private CharacterMove character;
+
+    [SerializeField]
+    private Button saveButton;
+
+    [SerializeField]
+    private TMP_Dropdown cameraOption;
+
+    [SerializeField]
+    private Camera backCamera;
+
+    [SerializeField]
+    private Camera topCamera;
+
+    [SerializeField]
+    private TMP_Dropdown obstacleOption;
 
     private void Awake()
     {

@@ -7,29 +7,54 @@ using UnityEngine.SceneManagement;
 
 public class CharacterMove : MonoBehaviour
 {
-    public float speed;
-    public Rigidbody rb;
-    private float turnSpeed = 10;
-    public float jumpforce;
+    [SerializeField]
+    private float speed;
+
+    [SerializeField]
+    private Rigidbody rb;
+
+    private float turnSpeed;
+
+    [SerializeField]
+    private float jumpforce;
+
     private Vector3 dir;
+
     private bool jump;
-    public TextMeshProUGUI scoreText;
+
+    [SerializeField]
+    private TextMeshProUGUI scoreText;
+
     private int score;
+
     private bool jetPack;
+
     private bool countJetpack;
-    public TextMeshProUGUI jetPackActivated;
-    public Joystick leftJoystick;
-    public Joystick rightJoystick;
-  
+
+    [SerializeField]
+    private TextMeshProUGUI jetPackActivated;
+
+    [SerializeField]
+    private Joystick leftJoystick;
+
+    [SerializeField]
+    private Joystick rightJoystick;
+
+    private float jetPackForce;
+
+    private int addScore;
 
     private void Awake()
     {
+        addScore = 10;
+        turnSpeed = 10;
         scoreText.text = "Score: 0";
         score = 0;
         jetPack = false;
         countJetpack = true;
         rb.useGravity = true;
         jump = false;
+        jetPackForce = 9000;
     }
     private void Start()
     {
@@ -43,7 +68,6 @@ public class CharacterMove : MonoBehaviour
             jump = true;
         }
         scoreText.text = "Score: " + score.ToString();
-       
 
         if (jetPack == true)
         {
@@ -87,7 +111,7 @@ public class CharacterMove : MonoBehaviour
     {
         if (rightJoystick.Vertical > 0)
         {
-            rb.AddForce(Vector3.up * 9000);
+            rb.AddForce(Vector3.up * jetPackForce);
         }
     }
 
@@ -117,7 +141,7 @@ public class CharacterMove : MonoBehaviour
     {
         if(other.gameObject.CompareTag("Coin"))
         {
-            score += 10;
+            score += addScore;
             other.gameObject.SetActive(false);
         }
     }
