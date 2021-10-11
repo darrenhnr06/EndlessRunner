@@ -16,30 +16,43 @@ public class CharacterMove : MonoBehaviour
     private bool jump;
     public TextMeshProUGUI scoreText;
     private int score;
+    private bool jetPack;
+    private bool countJetpack;
+  
 
     private void Awake()
     {
         scoreText.text = "Score: 0";
         score = 0;
+        jetPack = false;
+        countJetpack = true;
+        rb.useGravity = true;
+        jump = false;
     }
     private void Start()
     {
         dir = new Vector3(turnSpeed * Input.GetAxisRaw("Horizontal"), 0, speed);
-        rb.useGravity = true;
-        jump = false;
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.UpArrow) || (Input.GetKeyDown(KeyCode.W)))
+        if (Input.GetKeyDown(KeyCode.UpArrow) || (Input.GetKeyDown(KeyCode.W)) && (jetPack!=true))
         {
             jump = true;
         }
         scoreText.text = "Score: " + score.ToString();
+
+        if (jetPack == true)
+        {
+            ImplementJetpack();
+        }
     }
+
 
     private void OnCollisionEnter(Collision collision)
     {
+        Time.timeScale = 1;
+
         if(collision.gameObject.CompareTag("Obstacle"))
         {
             SceneManager.LoadScene(0);
@@ -53,11 +66,34 @@ public class CharacterMove : MonoBehaviour
             rb.AddForce(transform.up * jumpforce, ForceMode.Impulse);
             jump = false;
         }
+
+        if ((score > 100) && (jetPack == false) && (countJetpack == true))
+        {
+            jump = false;
+            jetPack = true;
+            StartCoroutine(JetPackTimer());
+        }
+    }
+
+    void ImplementJetpack()
+    {
+        if (Input.GetKey(KeyCode.UpArrow))
+        {
+            rb.AddForce(Vector3.up * 9000);
+        }
+    }
+
+    IEnumerator JetPackTimer()
+    {
+        yield return new WaitForSeconds(10f);
+        jetPack = false;
+        countJetpack = false;
+        jump = true;
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        
+        Time.timeScale = 0.7f;
     }
 
     private void FixedUpdate()
