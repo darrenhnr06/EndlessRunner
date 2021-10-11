@@ -7,7 +7,12 @@ public class GroundSpawner : MonoBehaviour
     public GameObject groundTile;
     Vector3 nextSpawnPoint;
     GameObject temp;
+  
 
+    private void Awake()
+    {
+        PlayerPrefs.SetInt("Obstacle", 2);
+    }
 
     public void SpawnTile()
     {
@@ -24,11 +29,20 @@ public class GroundSpawner : MonoBehaviour
         {
             temp.transform.GetChild(2).transform.GetChild(i).gameObject.SetActive(true);
         }
+
+        for (int i = 1; i < PlayerPrefs.GetInt("Obstacle") + 1 ; i++)
+        {
+            temp.transform.GetChild(3).transform.GetChild(i).gameObject.SetActive(true);
+        }
+
+        for (int i = PlayerPrefs.GetInt("Obstacle") + 1; i < 3; i++)
+        {
+            temp.transform.GetChild(3).transform.GetChild(i).gameObject.SetActive(false);
+        }
     }
 
     void Start()
     {
        SpawnTile();
     }
-
 }

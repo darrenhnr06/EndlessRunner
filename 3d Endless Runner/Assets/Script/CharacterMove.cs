@@ -7,8 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class CharacterMove : MonoBehaviour
 {
-    public float speed = 100;
-    public CharacterController characterController;
+    public float speed;
     public Rigidbody rb;
     private float turnSpeed = 10;
     public float jumpforce;
@@ -18,6 +17,9 @@ public class CharacterMove : MonoBehaviour
     private int score;
     private bool jetPack;
     private bool countJetpack;
+    public TextMeshProUGUI jetPackActivated;
+    public Joystick leftJoystick;
+    public Joystick rightJoystick;
   
 
     private void Awake()
@@ -31,16 +33,17 @@ public class CharacterMove : MonoBehaviour
     }
     private void Start()
     {
-        dir = new Vector3(turnSpeed * Input.GetAxisRaw("Horizontal"), 0, speed);
+        dir = new Vector3(turnSpeed * leftJoystick.Horizontal, 0, speed);
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.UpArrow) || (Input.GetKeyDown(KeyCode.W)) && (jetPack!=true))
+        if ((rightJoystick.Vertical > 0) && (jetPack!=true))
         {
             jump = true;
         }
         scoreText.text = "Score: " + score.ToString();
+       
 
         if (jetPack == true)
         {
@@ -48,6 +51,10 @@ public class CharacterMove : MonoBehaviour
         }
     }
 
+    public void SetSpeed(float _speed)
+    {
+        speed = _speed;
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -69,6 +76,7 @@ public class CharacterMove : MonoBehaviour
 
         if ((score > 100) && (jetPack == false) && (countJetpack == true))
         {
+            jetPackActivated.gameObject.SetActive(true);
             jump = false;
             jetPack = true;
             StartCoroutine(JetPackTimer());
@@ -77,7 +85,7 @@ public class CharacterMove : MonoBehaviour
 
     void ImplementJetpack()
     {
-        if (Input.GetKey(KeyCode.UpArrow))
+        if (rightJoystick.Vertical > 0)
         {
             rb.AddForce(Vector3.up * 9000);
         }
@@ -88,7 +96,9 @@ public class CharacterMove : MonoBehaviour
         yield return new WaitForSeconds(10f);
         jetPack = false;
         countJetpack = false;
+        jetPackActivated.gameObject.SetActive(false);
         jump = true;
+        jetPackActivated.gameObject.SetActive(false);
     }
 
     private void OnCollisionExit(Collision collision)
@@ -98,7 +108,8 @@ public class CharacterMove : MonoBehaviour
 
     private void FixedUpdate()
     {
-        dir.x = turnSpeed * Input.GetAxisRaw("Horizontal");
+        dir.z = speed;
+        dir.x = turnSpeed * leftJoystick.Horizontal;
         rb.velocity = dir;
     }
 
