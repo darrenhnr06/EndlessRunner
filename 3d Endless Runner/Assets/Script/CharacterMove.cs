@@ -4,87 +4,71 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System;
 
 public class CharacterMove : MonoBehaviour
 {
-    [SerializeField]
-    private float speed;
-
-    [SerializeField]
-    private Rigidbody rb;
-
-    private float turnSpeed;
-
-    [SerializeField]
-    private float jumpforce;
-
     private Vector3 dir;
 
-    private bool jump;
-
-    [SerializeField]
-    private TextMeshProUGUI scoreText;
-
     private int score;
+
+    private CharController charController;
+
+    private bool jump;
 
     private bool jetPack;
 
     private bool countJetpack;
 
-    [SerializeField]
-    private TextMeshProUGUI jetPackActivated;
-
-    [SerializeField]
-    private Joystick leftJoystick;
-
-    [SerializeField]
-    private Joystick rightJoystick;
-
-    private float jetPackForce;
-
-    private int addScore;
-
     private void Awake()
     {
-        addScore = 10;
-        turnSpeed = 10;
-        scoreText.text = "Score: 0";
         score = 0;
         jetPack = false;
         countJetpack = true;
-        rb.useGravity = true;
         jump = false;
-        jetPackForce = 9000;
     }
+
     private void Start()
     {
-        dir = new Vector3(turnSpeed * leftJoystick.Horizontal, 0, speed);
+        if(charController != null)
+        {
+            charController.SetScoreText("Score: 0");
+        }
+    }
+
+    public void SetCharController(CharController _charController)
+    {
+        charController = _charController;
     }
 
     private void Update()
     {
-        if ((rightJoystick.Vertical > 0) && (jetPack!=true))
+        if (charController != null)
         {
-            jump = true;
-        }
-        scoreText.text = "Score: " + score.ToString();
+            jump = charController.CheckJump(jetPack);
 
-        if (jetPack == true)
-        {
-            ImplementJetpack();
+            charController.SetScoreText("Score: " + score.ToString());
+
+            if (jetPack == true)
+            {
+                charController.ImplementJetpack();
+            }
         }
     }
 
     public void SetSpeed(float _speed)
     {
-        speed = _speed;
+        if (charController != null)
+        {
+            charController.SetSpeed(_speed);
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         Time.timeScale = 1;
 
-        if(collision.gameObject.CompareTag("Obstacle"))
+        if (collision.gameObject.CompareTag("Obstacle") || collision.gameObject.CompareTag("FallCollide"))
         {
             SceneManager.LoadScene(0);
         }
@@ -92,37 +76,32 @@ public class CharacterMove : MonoBehaviour
 
     private void OnCollisionStay(Collision collision)
     {
-        if(jump == true)
+        if (charController != null)
         {
-            rb.AddForce(transform.up * jumpforce, ForceMode.Impulse);
-            jump = false;
-        }
+            if (jump == true)
+            {
+                jump = charController.ImplementJump();
+            }
 
-        if ((score > 100) && (jetPack == false) && (countJetpack == true))
-        {
-            jetPackActivated.gameObject.SetActive(true);
-            jump = false;
-            jetPack = true;
-            StartCoroutine(JetPackTimer());
-        }
-    }
-
-    void ImplementJetpack()
-    {
-        if (rightJoystick.Vertical > 0)
-        {
-            rb.AddForce(Vector3.up * jetPackForce);
+            if ((score > 100) && (jetPack == false) && (countJetpack == true))
+            {
+                jetPack = charController.ActivateJetPack();
+                jump = false;
+                StartCoroutine(JetPackTimer());
+            }
         }
     }
 
     IEnumerator JetPackTimer()
     {
         yield return new WaitForSeconds(10f);
-        jetPack = false;
-        countJetpack = false;
-        jetPackActivated.gameObject.SetActive(false);
-        jump = true;
-        jetPackActivated.gameObject.SetActive(false);
+
+        if (charController != null)
+        {
+            jetPack = charController.DeactivateJetPack();
+            countJetpack = false;
+            jump = true;
+        }
     }
 
     private void OnCollisionExit(Collision collision)
@@ -132,17 +111,20 @@ public class CharacterMove : MonoBehaviour
 
     private void FixedUpdate()
     {
-        dir.z = speed;
-        dir.x = turnSpeed * leftJoystick.Horizontal;
-        rb.velocity = dir;
+        if (charController != null)
+        {
+            charController.Velocity(dir);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.CompareTag("Coin"))
         {
-            score += addScore;
-            other.gameObject.SetActive(false);
+            if (charController != null)
+            {
+                score = charController.UpdateScore(score, other);
+            }
         }
     }
 }
