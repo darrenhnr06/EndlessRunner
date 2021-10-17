@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 6
   rb: {fileID: 6180472869791171372, guid: dcd889b39cebe774abc68b880db39815, type: 3}
-  turnSpeed: 10
-  jumpforce: 6000
+  turnSpeed: 100
+  jumpforce: 11000
   jetPackForce: 9000
   addScore: 10
   playerGameObject: {fileID: 6180472869791171369, guid: dcd889b39cebe774abc68b880db39815, type: 3}

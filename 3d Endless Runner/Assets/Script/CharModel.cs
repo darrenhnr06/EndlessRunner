@@ -7,11 +7,17 @@ public class CharModel
     public CharModel(PlayerScriptableObject playerScriptableObject)
     {
         speed = playerScriptableObject.speed;
+
         rb = playerScriptableObject.rb;
+
         turnSpeed = playerScriptableObject.turnSpeed;
+
         jumpforce = playerScriptableObject.jumpforce;
+
         jetPackForce = playerScriptableObject.jetPackForce;
+
         addScore = playerScriptableObject.addScore;
+
         playerGameObject = playerScriptableObject.playerGameObject;
     }
 

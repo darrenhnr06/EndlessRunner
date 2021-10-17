@@ -1,21 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class CharacterService : MonoBehaviour
 {
-    public PlayerScriptableObject playerScriptableObject;
+    [SerializeField]
+    private PlayerScriptableObject playerScriptableObject;
 
-    public TextMeshProUGUI scoreText;
+    [SerializeField]
+    private TextMeshProUGUI scoreText;
 
-    public TextMeshProUGUI jetPackActivated;
+    [SerializeField]
+    private TextMeshProUGUI jetPackActivated;
 
-    public Joystick leftJoystick;
+    [SerializeField]
+    private DebugMenu debugMenu;
 
-    public Joystick rightJoystick;
-
-    public DebugMenu debugMenu;
+    [SerializeField]
+    private Joystick joystick;
 
     void Start()
     {
@@ -25,6 +29,6 @@ public class CharacterService : MonoBehaviour
     void CreateNewPlayer()
     {
         CharModel charModel = new CharModel(playerScriptableObject);
-        CharController charController = new CharController(charModel, scoreText, jetPackActivated, leftJoystick, rightJoystick, debugMenu);
+        CharController charController = new CharController(charModel, scoreText, jetPackActivated, debugMenu, joystick);
     }
 }

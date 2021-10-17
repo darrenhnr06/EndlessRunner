@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CharController 
 {
@@ -10,17 +11,17 @@ public class CharController
 
     private Rigidbody rb;
 
-    public CharController(CharModel _charModel, TextMeshProUGUI scoreText, TextMeshProUGUI jetPackActivated, Joystick leftJoystick, Joystick rightJoystick, DebugMenu debugMenu)
+    private int swipeHorizontal;
+
+    private Joystick joystick;
+
+    public CharController(CharModel _charModel, TextMeshProUGUI scoreText, TextMeshProUGUI jetPackActivated, DebugMenu debugMenu, Joystick _joystick)
     {
         charModel = _charModel;
 
         ScoreText = scoreText;
 
         JetPackActivated = jetPackActivated;
-
-        LeftJoystick = leftJoystick;
-
-        RightJoystick = rightJoystick;
 
         player = GameObject.Instantiate(charModel.playerGameObject);
 
@@ -31,11 +32,32 @@ public class CharController
         characterMove.SetCharController(this);
 
         debugMenu.SetCharacterMove(characterMove);
+
+        joystick = _joystick;
+    }
+
+    public void SetSwipeHorizontal()
+    {
+        if(SwipeManager.swipeLeft)
+        {
+            swipeHorizontal = -1;
+        }
+
+        else if(SwipeManager.swipeRight)
+        {
+            swipeHorizontal = 1;
+        }
+
+        else
+        {
+            swipeHorizontal = 0;
+        }
     }
 
     public void Velocity(Vector3 dir)
     {
-        dir = new Vector3(charModel.turnSpeed * LeftJoystick.Horizontal, 0, charModel.speed);
+        SetSwipeHorizontal();
+        dir = new Vector3(charModel.turnSpeed * swipeHorizontal, 0, charModel.speed);
         rb.velocity = dir;
     }
 
@@ -46,7 +68,7 @@ public class CharController
 
     public bool CheckJump(bool jetPack)
     {
-        if ((RightJoystick.Vertical > 0) && (jetPack != true))
+        if ((SwipeManager.swipeUp) && (jetPack != true))
         {
             return true;
         }
@@ -59,12 +81,14 @@ public class CharController
     public bool ActivateJetPack()
     {
         JetPackActivated.gameObject.SetActive(true);
+        joystick.gameObject.SetActive(true);
         return true;
     }
 
     public bool DeactivateJetPack()
     {
         JetPackActivated.gameObject.SetActive(false);
+        joystick.gameObject.SetActive(false);
         return false;
     }
 
@@ -75,7 +99,7 @@ public class CharController
 
     public void ImplementJetpack()
     {
-        if (RightJoystick.Vertical > 0)
+        if (joystick.Vertical > 0)
         {
             rb.AddForce(Vector3.up * charModel.jetPackForce);
         }
@@ -98,6 +122,4 @@ public class CharController
     public CharModel charModel { get; }
     public TextMeshProUGUI ScoreText { get; }
     public TextMeshProUGUI JetPackActivated { get; }
-    public Joystick LeftJoystick { get; }
-    public Joystick RightJoystick { get; }
 }

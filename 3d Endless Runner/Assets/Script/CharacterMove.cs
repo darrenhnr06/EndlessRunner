@@ -48,11 +48,11 @@ public class CharacterMove : MonoBehaviour
             jump = charController.CheckJump(jetPack);
 
             charController.SetScoreText("Score: " + score.ToString());
+        }
 
-            if (jetPack == true)
-            {
-                charController.ImplementJetpack();
-            }
+        if (jetPack == true)
+        {
+            charController.ImplementJetpack();
         }
     }
 
@@ -109,13 +109,6 @@ public class CharacterMove : MonoBehaviour
         Time.timeScale = 0.7f;
     }
 
-    private void FixedUpdate()
-    {
-        if (charController != null)
-        {
-            charController.Velocity(dir);
-        }
-    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -125,6 +118,14 @@ public class CharacterMove : MonoBehaviour
             {
                 score = charController.UpdateScore(score, other);
             }
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (charController != null)
+        {
+            charController.Velocity(dir);
         }
     }
 }
