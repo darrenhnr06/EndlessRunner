@@ -13,8 +13,7 @@ public class CharController
 
     private int swipeHorizontal;
 
-    private Joystick joystick;
-
+    
     public CharController(CharModel _charModel, TextMeshProUGUI scoreText, TextMeshProUGUI jetPackActivated, DebugMenu debugMenu, Joystick _joystick)
     {
         charModel = _charModel;
@@ -118,6 +117,7 @@ public class CharController
         return score;
     }
 
+    public Joystick joystick { get; }
     public CharacterMove characterMove { get; }
     public CharModel charModel { get; }
     public TextMeshProUGUI ScoreText { get; }
